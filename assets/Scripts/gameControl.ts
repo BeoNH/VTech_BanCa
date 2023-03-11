@@ -27,10 +27,11 @@ export default class gameControl extends cc.Component {
   }
 
   controlSound(): void {
-    if (this.node.getComponent(cc.Button).normalSprite) {
-      this.node.getComponent(cc.Button).pressedSprite;
+    const buttonClick = this.node.getComponent(cc.Button);
+    if (buttonClick.normalSprite && buttonClick) {
+      buttonClick.pressedSprite;
     } else {
-      this.node.getComponent(cc.Button).normalSprite;
+      buttonClick.normalSprite;
     }
   }
 
