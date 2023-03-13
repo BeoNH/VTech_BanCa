@@ -16,14 +16,11 @@ export default class dayCau extends cc.Component {
 
   onLoad() {
     dayCau.instance = this;
-    
+
     //this.luoiCau = cc.find("hook-sheet0").getPosition();
     this.node.angle = 0;
       if (this.typeAction == TypeAction.Nghi) {
         this.onRotateObj();
-      }
-      else{
-        this.node.stopAllActions();
       }
   }
 

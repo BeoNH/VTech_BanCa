@@ -63,7 +63,7 @@ export default class NewClass extends cc.Component {
   public setScore(newScore: number) {
     this.score = newScore;
     let myScore = cc.find("Canvas/boat-sheet0/Score").getComponent(cc.RichText);
-    console.log(myScore);
+    console.log(myScore.name);
     myScore.string = this.score.toString();
     //return myScore;
   }

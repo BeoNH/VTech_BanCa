@@ -8,37 +8,54 @@
 import gameManager from "./gameManager";
 
 const {ccclass, property} = cc._decorator;
+const { audioEngine } = cc;
 
 @ccclass
 export default class gameControl extends cc.Component {
+  @property(cc.AudioClip) audio: cc.AudioClip = null;
 
-  private time: number;
+  private count: number = 0;
   // LIFE-CYCLE CALLBACKS:
 
-  onLoad () {
+  onLoad() {
     this.node.on("click", this.mainMenu, this);
+    this.node.on("clickSound", this.controlSound, this);
   }
 
-  start() {}
+  start() {
+    cc.audioEngine.playMusic(this.audio, true);
+  }
 
   // update (dt) {}
+
   mainMenu(): void {
     cc.director.loadScene("NewScene");
   }
 
   controlSound(): void {
-    const buttonClick = this.node.getComponent(cc.Button);
-    if (buttonClick.normalSprite && buttonClick) {
-      buttonClick.pressedSprite;
-    } else {
-      buttonClick.normalSprite;
+    const buttonClick = cc.find("Canvas/BtnSound").getComponent(cc.Button);
+    buttonClick.transition = cc.Button.Transition.SPRITE;
+
+    if (buttonClick) {
+      this.count ++;
+      //console.log(this.count)
+      if (buttonClick.normalSprite) {
+        const saveSprite = buttonClick.normalSprite;
+        buttonClick.normalSprite = buttonClick.pressedSprite;
+        buttonClick.pressedSprite = saveSprite;
+        if (this.count % 2) {
+          cc.audioEngine.pauseMusic();
+        } else {
+          cc.audioEngine.resumeMusic();
+        }
+      } 
     }
   }
 
   playGame(): void {
     cc.director.loadScene("gamePlay");
 
-    this.time = 60;
+    //this.time = 60;
     gameManager.instance.setScore(0);
   }
 }
