@@ -20,12 +20,12 @@ export default class gamePlay extends cc.Component {
   start() {
     this.node.on(
       cc.Node.EventType.TOUCH_START,
-      luoiCau.instance.onTouchStart,
+      (ev) => luoiCau.instance.onTouchStart(ev),
       this
     );
     this.node.on(
       cc.Node.EventType.TOUCH_END,
-      luoiCau.instance.onTouchEnd,
+      (ev)=>luoiCau.instance.onTouchEnd(ev),
       this
     );
 
