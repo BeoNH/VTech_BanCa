@@ -12,6 +12,8 @@ const { audioEngine } = cc;
 
 @ccclass
 export default class gameControl extends cc.Component {
+  public static instance: gameControl;
+
   @property(cc.AudioClip) audio: cc.AudioClip = null;
 
   private count: number = 0;
@@ -20,13 +22,13 @@ export default class gameControl extends cc.Component {
   onLoad() {
     this.node.on("click", this.mainMenu, this);
     this.node.on("clickSound", this.controlSound, this);
+
+    gameControl.instance = this;
   }
 
   start() {
     cc.audioEngine.playMusic(this.audio, true);
   }
-
-  // update (dt) {}
 
   mainMenu(): void {
     cc.director.loadScene("NewScene");
@@ -37,7 +39,7 @@ export default class gameControl extends cc.Component {
     buttonClick.transition = cc.Button.Transition.SPRITE;
 
     if (buttonClick) {
-      this.count ++;
+      this.count++;
       //console.log(this.count)
       if (buttonClick.normalSprite) {
         const saveSprite = buttonClick.normalSprite;
@@ -48,14 +50,11 @@ export default class gameControl extends cc.Component {
         } else {
           cc.audioEngine.resumeMusic();
         }
-      } 
+      }
     }
   }
 
   playGame(): void {
     cc.director.loadScene("gamePlay");
-
-    //this.time = 60;
-    gameManager.instance.setScore(0);
   }
 }

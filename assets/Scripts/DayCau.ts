@@ -1,4 +1,4 @@
-import { TypeAction } from "./gameManager";
+// import { TypeAction } from "./gameManager";
 import luoiCau from "./LuoiCau";
 
 const {ccclass, property} = cc._decorator;
@@ -6,12 +6,6 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class dayCau extends cc.Component {
   public static instance: dayCau = null;
-
-  @property(cc.Node)
-  objectToStill: cc.Node = null;
-
-  public typeAction: TypeAction = TypeAction.Nghi;
-
   // LIFE-CYCLE CALLBACKS:
 
   onLoad() {
@@ -19,19 +13,17 @@ export default class dayCau extends cc.Component {
 
     //this.luoiCau = cc.find("hook-sheet0").getPosition();
     this.node.angle = 0;
-      if (this.typeAction == TypeAction.Nghi) {
-        this.onRotateObj();
-      }
+    this.onRotateObj();
   }
 
   protected update(dt: number): void {
-    this.drawLine();
-    
+    this.drawLine();   
   }
 
   drawLine(): void{
-    const graphics = this.node.getComponent(cc.Graphics);
-      const luoiCauPos = this.node.getChildByName("hook-sheet0").position;
+    let graphics = this.node.getComponent(cc.Graphics);
+    let luoiCauPos = this.node.getChildByName("hook-sheet0").position;
+    graphics.clear();
 
     graphics.lineCap = cc.Graphics.LineCap.ROUND; // đặt kiểu đầu mút vẽ là hình tròn
     graphics.strokeColor = new cc.Color().fromHEX("#FFFFFF");
@@ -40,7 +32,17 @@ export default class dayCau extends cc.Component {
     graphics.lineTo(luoiCauPos.x, luoiCauPos.y);
     graphics.stroke();
 
-    //console.log(luoiCauPos.x, "dim neo");
+    //console.log(luoiCauPos, "dim neo");
+  }
+
+  startRotate(){
+    this.node.angle = 0;
+    this.node.stopAllActions();
+    this.onRotateObj();
+  }
+
+  stopRotate(){
+    this.node.stopAllActions();
   }
 
   onRotateObj() {

@@ -7,7 +7,7 @@
 
 import dayCau from "./DayCau";
 import DayCau from "./DayCau";
-import gameManager, { TypeAction } from "./gameManager";
+// import gameManager, { TypeAction } from "./gameManager";
 import luoiCau from "./LuoiCau";
 
 const {ccclass, property} = cc._decorator;
@@ -20,33 +20,55 @@ export default class NewClass extends cc.Component {
   private _scoreCount: number;
 
   onCollisionEnter(other: cc.Collider, self: cc.Collider): void {
-    const rect1 = other.node.getBoundingBoxToWorld();
-    const rect2 = self.node.getBoundingBoxToWorld();
-    //console.log(self.name, self.node.position);
-    
-    if (
-      cc.Intersection.rectRect(rect1, rect2) &&
-      other.node.name == "hook-sheet0"
-    ) {
+    if (self.node !== other.node && other.node.name == "hook-sheet0") {
+      this.node.stopAllActions();
       // Khi obj1 va chạm với obj2
       luoiCau.instance.onCallBack();
 
-      cc.tween(self.node)
-        .to(2, {
-          angle: 100,
-          position: DayCau.instance.objectToStill.position,
-        })
-        .start();
-
-      this.onCheckDestroy(self.node);
+      self.node.parent = other.node;
+      self.node.setPosition(0, 0);
     }
   }
 
-  onCheckDestroy(node: cc.Node): void {
-    if (dayCau.instance.typeAction == TypeAction.Nghi) {
-      this._scoreCount ++;
-      gameManager.instance.setScore(this._scoreCount);
-      node.destroy();
+  start() {
+    this.onMove();
+  }
+
+  // update (dt) {}
+
+  onMove(): void {
+    let randMove = Math.random() * (10 - 7) + 7;
+    if(this.node.position.x == -800){
+      cc.tween(this.node)
+        .repeatForever(
+          cc.sequence(
+            cc.moveTo(randMove, cc.v2(800, this.node.position.y)),
+            cc.callFunc(() => {
+              this.node.scaleX *= -1; // đổi chiều scaleX để lật node lại
+            }),
+            cc.moveTo(randMove, cc.v2(-800, this.node.position.y)),
+            cc.callFunc(() => {
+              this.node.scaleX *= -1; // đổi chiều scaleX để lật node lại
+            })
+          )
+        )
+        .start();
+    }
+    else{
+      cc.tween(this.node)
+        .repeatForever(
+          cc.sequence(
+            cc.callFunc(() => {
+              this.node.scaleX *= -1; // đổi chiều scaleX để lật node lại
+            }),
+            cc.moveTo(randMove, cc.v2(-800, this.node.position.y)),
+            cc.callFunc(() => {
+              this.node.scaleX *= -1; // đổi chiều scaleX để lật node lại
+            }),
+            cc.moveTo(randMove, cc.v2(800, this.node.position.y))
+          )
+        )
+        .start();
     }
   }
 }

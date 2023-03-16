@@ -20,12 +20,11 @@ export default class Pirana extends cc.Component {
     const rect2 = self.node.getBoundingBoxToWorld();
     //console.log(self.name, self.node.position);
 
-    if (
-      cc.Intersection.rectRect(rect1, rect2) &&
-      other.node.name != "hook-sheet0"
-    ) {
+    if (cc.Intersection.rectRect(rect1, rect2) && other.node.name != "hook-sheet0") 
+    {
+        other.node.removeFromParent(false);
         this.onDead = true;
-      this.swapDead(other.node);
+        this.swapDead(other.node);
     }
   }
 
@@ -34,12 +33,15 @@ export default class Pirana extends cc.Component {
     cc.resources.load("Images/dead1", cc.SpriteFrame, (err, spriteFrame) => {
       // Thay đổi ảnh hiện tại trong component sprite
       dead.getComponent(cc.Sprite).spriteFrame = spriteFrame;
-
+      console.log(spriteFrame.name);
       cc.tween(dead)
         .to(1, { position: cc.v3(0, -100) })
+        .call(() => {console.log("bi an mat");})
         .call(() => {
           dead.destroy();
           gamePlay.instance.currentEnemyCount--;
+          console.log(this.onDead);
+
         })
         .start();
     });

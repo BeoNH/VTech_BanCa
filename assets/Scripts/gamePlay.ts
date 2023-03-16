@@ -8,14 +8,18 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class gamePlay extends cc.Component {
+  public static instance: gamePlay = null;
+
   @property(cc.Prefab)
   enemyList: cc.Prefab[] = [];
 
-  @property(cc.Node)
-  prePosList: cc.Node[] = [];
+  @property(cc.Prefab)
+  piranaPfb: cc.Prefab = null;
+
+  public currentEnemyCount: number = 0;
+  public score: number = 0;
 
   private collisionManager: cc.CollisionManager;
-
 
   start() {
     this.node.on(
@@ -25,65 +29,56 @@ export default class gamePlay extends cc.Component {
     );
     this.node.on(
       cc.Node.EventType.TOUCH_END,
-      (ev)=>luoiCau.instance.onTouchEnd(ev),
+      (ev) => luoiCau.instance.onTouchEnd(ev),
       this
     );
-
-
   }
 
   onLoad() {
     // Get reference to the collision manager once
+    gamePlay.instance = this;
+
     this.collisionManager = cc.director.getCollisionManager();
     this.collisionManager.enabled = true;
     this.collisionManager.enabledDebugDraw = true;
     this.collisionManager.enabledDrawBoundingBox = true;
-
-
-    this.spawnEnemy();
-    this.spawnEnemy();
-    this.spawnEnemy();
-    this.spawnEnemy();
   }
 
   protected update(dt: number): void {
-    //this.spawnEnemy();
+    this.spawnEnemy(10);
+    this.setScore();
+    this.spawnPirana();
   }
 
+  spawnEnemy(max: number) {
+    if (this.currentEnemyCount < max) {
+      let randomNumber = Math.floor(Math.random() * this.enemyList.length);
+      let newEnemy = cc.instantiate(this.enemyList[randomNumber]);
+      cc.Canvas.instance.node.addChild(newEnemy);
 
+      let randY = Math.random() * (50 + 850) - 850;
+      let randX = Math.random() < 0.5 ? -800 : 800;
+      newEnemy.setPosition(randX, randY);
 
-
-
-
-  spawnEnemy() {
-    // randomly select an enemy prefab from the list
-    const randomIndex = Math.floor(Math.random() * this.enemyList.length);
-    const randomEnemyPrefab = this.enemyList[randomIndex];
-    // create a new enemy instance
-    const newEnemy = cc.instantiate(randomEnemyPrefab);
-
-    let randomIndexPos = Math.floor(Math.random() * this.prePosList.length);
-    const randomPrePos = this.prePosList[randomIndexPos];
-        
-    // add the enemy to the scene
-    cc.director.getScene().addChild(newEnemy);
-    newEnemy.setPosition(randomPrePos.position);
-    
-
-    cc.tween(newEnemy).to(1, { position: cc.v3(0,0) }).start();
-
-    console.log(newEnemy.name, newEnemy.getPosition().x,newEnemy.getPosition().y,"sinh ra");
-
-    if(newEnemy.isValid){
-      this.scheduleOnce(() => {
-          newEnemy.destroy();
-          console.log(newEnemy.name, "bi xoa");
-        }, 10);
+      this.currentEnemyCount++;
     }
-    // if (cc.director.loadScene("NewScene")) {
-    //   newEnemy.destroy();
-    //   console.log(newEnemy.name, "bi xoa 2");
-    // }
-      
+  }
+
+  spawnPirana(){
+    if(this.score == 5){
+      let newPirana = cc.instantiate(this.piranaPfb);
+      cc.Canvas.instance.node.addChild(newPirana);
+
+      newPirana.setPosition(-700, 150);
+    }
+
+  }
+
+  public setScore() {
+    let myScore = cc.find("Canvas/boat-sheet0/Score").getComponent(cc.RichText);
+    myScore.string = this.score.toString();
+    let newScore = parseInt(cc.sys.localStorage.getItem("score")) || 0;
+    newScore = this.score;
+    cc.sys.localStorage.setItem("score", newScore.toString());
   }
 }   
