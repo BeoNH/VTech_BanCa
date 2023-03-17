@@ -25,13 +25,18 @@ export default class NewClass extends cc.Component {
       // Khi obj1 va chạm với obj2
       luoiCau.instance.onCallBack();
 
+      let angleFish =(Math.atan2(other.node.y - self.node.y, other.node.x - self.node.x) * 180) / Math.PI;
+      cc.tween(self.node)
+      .to(0, {angle: angleFish})
+      .start()
+
       self.node.parent = other.node;
       self.node.setPosition(0, 0);
     }
   }
 
   start() {
-    this.onMove();
+    //this.onMove();
   }
 
   // update (dt) {}

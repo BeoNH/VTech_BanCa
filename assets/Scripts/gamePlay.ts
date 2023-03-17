@@ -45,7 +45,7 @@ export default class gamePlay extends cc.Component {
   }
 
   protected update(dt: number): void {
-    this.spawnEnemy(10);
+    //this.spawnEnemy(10);
     this.setScore();
     this.spawnPirana();
   }

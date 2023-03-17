@@ -16,35 +16,26 @@ export default class Pirana extends cc.Component {
   public onDead: boolean = false;
 
   onCollisionEnter(other: cc.Collider, self: cc.Collider): void {
-    const rect1 = other.node.getBoundingBoxToWorld();
-    const rect2 = self.node.getBoundingBoxToWorld();
-    //console.log(self.name, self.node.position);
+    //console.log(other.name, other.node.position.y);
 
-    if (cc.Intersection.rectRect(rect1, rect2) && other.node.name != "hook-sheet0") 
+
+    if (other.node.name !== "hook-sheet0") 
     {
-        other.node.removeFromParent(false);
-        this.onDead = true;
-        this.swapDead(other.node);
-    }
-  }
-
-  swapDead(dead: cc.Node) {
-    // Tìm file ảnh mới trong assets
-    cc.resources.load("Images/dead1", cc.SpriteFrame, (err, spriteFrame) => {
-      // Thay đổi ảnh hiện tại trong component sprite
-      dead.getComponent(cc.Sprite).spriteFrame = spriteFrame;
-      console.log(spriteFrame.name);
-      cc.tween(dead)
-        .to(1, { position: cc.v3(0, -100) })
-        .call(() => {console.log("bi an mat");})
+        //other.node.removeFromParent(false);
+        console.log(other.node.parent.name);
+        cc.tween(other.node)
         .call(() => {
-          dead.destroy();
-          gamePlay.instance.currentEnemyCount--;
-          console.log(this.onDead);
-
-        })
+          other.node.parent = self.node;
+          other.node.getComponent(cc.Sprite).enabled = false;
+          other.node.children[0].getComponent(cc.Sprite).enabled = true;})
+        .to(1, {position: cc.v3(0,-100)})
+        .call(() => {other.node.destroy()})
         .start();
-    });
+      
+        console.log("an thit");
+
+        this.onDead = true;
+    }
   }
 
   // LIFE-CYCLE CALLBACKS:
@@ -54,7 +45,7 @@ export default class Pirana extends cc.Component {
   }
 
   start() {
-    this.onMove();
+    //this.onMove();
   }
 
   // update (dt) {}

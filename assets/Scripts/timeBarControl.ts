@@ -25,7 +25,7 @@ export default class timeBar extends cc.Component {
   }
 
   update(dt) {
-    this.startCountdown(30);
+    //this.startCountdown(30);
   }
 
   startCountdown(duration: number) {

@@ -17,6 +17,9 @@ export default class NewClass extends cc.Component {
 
   private score: number;
 
+  @property(cc.Sprite)
+  deadSwap: cc.Sprite = null;
+
   start() {
     this.node.on(cc.Node.EventType.TOUCH_START, this.onTouchStart, this);
     this.startCountdown(20);
@@ -34,6 +37,9 @@ export default class NewClass extends cc.Component {
       .start();
     this.setScore(2);
     this.increaseWidth();
+    if(this.deadSwap){
+      this.deadSwap.enabled = true;
+    }
     // const a = cc.find("Canvas/Score").getComponent(cc.RichText);
     // a.string = "alo nghe ro tra loi";
     // console.log(a);

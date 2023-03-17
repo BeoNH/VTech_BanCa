@@ -22,11 +22,19 @@ export default class luoiCau extends cc.Component {
   public startPos: cc.Vec3;
   private isRunning: boolean = false;
   //public luoCauPos: cc.Vec3 = this.node.position;
+  private tween: cc.Tween;
 
   onLoad() {
     luoiCau.instance = this;
     this.startPos = this.node.position;
   }
+  protected update(dt: number): void {
+    this.onCheckOverScene();
+  }
+
+
+
+
 
   onTouchStart(event: cc.Event.EventTouch) {
     // console.log(".............1");
@@ -37,14 +45,31 @@ export default class luoiCau extends cc.Component {
     if (!this.isRunning) {
       this.isRunning = true
 
-      cc.tween(this.node)
+      this.tween = cc.tween(this.node)
         .by(this.moveTimeSpeed, { position: cc.v3(0, -this.moveDistance) })
         .by(this.moveTimeSpeed, { position: cc.v3(0, this.moveDistance) })
-        .call(() =>{ dayCau.instance.startRotate();})
+        .call(() => {dayCau.instance.startRotate();})
         .call(() => {this.isRunning = false;})
         .start();
 
       // console.log(".........2");
+      //this.onCheckOverScene();
+    }
+  }
+
+  onCheckOverScene(): void{
+    
+    let hookPos = this.node.convertToWorldSpaceAR(cc.Vec2.ZERO);
+    let sizeScene = cc.view.getVisibleSize();
+
+    if(hookPos.x < 0 || hookPos.x > sizeScene.width || hookPos.y < 0 || hookPos.y > sizeScene.height){
+      //this.node.stopAllActions();
+      this.tween.stop();
+      cc.tween(this.node)
+        .to(this.moveTimeSpeed, { position: this.startPos })
+        .call(() =>{ dayCau.instance.startRotate();})
+        .call(() => {this.isRunning = false;})
+        .start();
     }
   }
 
