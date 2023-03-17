@@ -13,8 +13,8 @@ export default class gamePlay extends cc.Component {
   @property(cc.Prefab)
   enemyList: cc.Prefab[] = [];
 
-  @property(cc.Prefab)
-  piranaPfb: cc.Prefab = null;
+  @property(cc.Node)
+  piranaPfb: cc.Node = null;
 
   public currentEnemyCount: number = 0;
   public score: number = 0;
@@ -45,7 +45,7 @@ export default class gamePlay extends cc.Component {
   }
 
   protected update(dt: number): void {
-    //this.spawnEnemy(10);
+    this.spawnEnemy(15);
     this.setScore();
     this.spawnPirana();
   }
@@ -66,10 +66,7 @@ export default class gamePlay extends cc.Component {
 
   spawnPirana(){
     if(this.score == 5){
-      let newPirana = cc.instantiate(this.piranaPfb);
-      cc.Canvas.instance.node.addChild(newPirana);
-
-      newPirana.setPosition(-700, 150);
+      this.piranaPfb.active = true;
     }
 
   }

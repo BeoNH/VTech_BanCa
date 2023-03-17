@@ -45,21 +45,22 @@ export default class Pirana extends cc.Component {
   }
 
   start() {
-    //this.onMove();
+    this.onMove();
   }
 
   // update (dt) {}
 
   onMove(): void {
+    let randMove = Math.random() * (9 - 6) + 6;
     cc.tween(this.node)
       .repeatForever(
         cc.sequence(
-          cc.moveTo(8, cc.v2(800, this.node.position.y)),
+          cc.moveTo(randMove, cc.v2(800, this.node.position.y)),
           cc.callFunc(() => {
             this.node.scaleX *= -1; // đổi chiều scaleX để lật node lại
           }),
           cc.delayTime(1),
-          cc.moveTo(8, cc.v2(-800, this.node.position.y)),
+          cc.moveTo(randMove, cc.v2(-800, this.node.position.y)),
           cc.callFunc(() => {
             this.node.scaleX *= -1; // đổi chiều scaleX để lật node lại
           })

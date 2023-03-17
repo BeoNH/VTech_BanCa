@@ -13,11 +13,8 @@ import luoiCau from "./LuoiCau";
 const {ccclass, property} = cc._decorator;
 @ccclass
 export default class NewClass extends cc.Component {
-  //this.node.runAction(cc.moveTo(1, Player.Instance.objectToMove.getPosition()));
-
   // LIFE-CYCLE CALLBACKS:
-
-  private _scoreCount: number;
+  private check: number;
 
   onCollisionEnter(other: cc.Collider, self: cc.Collider): void {
     if (self.node !== other.node && other.node.name == "hook-sheet0") {
@@ -25,10 +22,14 @@ export default class NewClass extends cc.Component {
       // Khi obj1 va chạm với obj2
       luoiCau.instance.onCallBack();
 
-      let angleFish =(Math.atan2(other.node.y - self.node.y, other.node.x - self.node.x) * 180) / Math.PI;
-      cc.tween(self.node)
-      .to(0, {angle: angleFish})
-      .start()
+      // let angleFish = (Math.atan2(-other.node.y + self.node.y, -other.node.x + self.node.x) * 180) /Math.PI;
+      // console.log(angleFish);
+      // if(angleFish < 90){
+      //   self.node.angle = angleFish;
+      // }else{
+      //   self.node.angle = -angleFish;
+      // }
+      self.node.angle = 90 * self.node.scaleX;
 
       self.node.parent = other.node;
       self.node.setPosition(0, 0);
@@ -36,14 +37,14 @@ export default class NewClass extends cc.Component {
   }
 
   start() {
-    //this.onMove();
+    this.onMove();
   }
 
   // update (dt) {}
 
   onMove(): void {
     let randMove = Math.random() * (10 - 7) + 7;
-    if(this.node.position.x == -800){
+    if (this.node.position.x == -800) {
       cc.tween(this.node)
         .repeatForever(
           cc.sequence(
@@ -58,8 +59,7 @@ export default class NewClass extends cc.Component {
           )
         )
         .start();
-    }
-    else{
+    } else {
       cc.tween(this.node)
         .repeatForever(
           cc.sequence(
