@@ -36,7 +36,7 @@ export default class dayCau extends cc.Component {
   }
 
   startRotate(){
-    this.node.angle = 0;
+    //this.node.angle = 0;
     this.node.stopAllActions();
     this.onRotateObj();
   }
